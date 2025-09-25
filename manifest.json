@@ -1,0 +1,18 @@
+{
+  "name": "AWS Console Region Rewriter (MV3)",
+  "description": "Force AWS Console links from us-east-2 to us-east-1.",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "permissions": ["declarativeNetRequest"],
+  "host_permissions": ["https://*.console.aws.amazon.com/*"],
+  "declarative_net_request": {
+    "rule_resources": [
+      { "id": "rules", "enabled": true, "path": "rules.json" }
+    ]
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
