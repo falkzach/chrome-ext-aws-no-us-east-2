@@ -26,6 +26,8 @@
     return rule.from === "*" && rule.to === "*";
   }
 
+  let draggingRow = null;
+
   function createRuleRow(rule) {
     const row = document.createElement("div");
     row.className = "rule-row";
@@ -33,6 +35,26 @@
 
     if (isTerminalRule) {
       row.classList.add("terminal-rule");
+    }
+
+    // Create drag handle or lock icon
+    const handle = document.createElement("div");
+    if (isTerminalRule) {
+      handle.className = "drag-handle locked";
+      handle.innerHTML = "🔒";
+      handle.title = "This default terminal rule is locked and cannot be reordered.";
+    } else {
+      handle.className = "drag-handle";
+      handle.innerHTML = "⋮⋮";
+      handle.title = "Drag to reorder rule";
+
+      // Enable drag only on handle mousedown/touchstart to preserve input text selection
+      handle.addEventListener("mousedown", () => {
+        row.setAttribute("draggable", "true");
+      });
+      handle.addEventListener("touchstart", () => {
+        row.setAttribute("draggable", "true");
+      });
     }
 
     const from = document.createElement("input");
@@ -63,7 +85,53 @@
       });
     }
 
-    row.append(from, to, remove);
+    // Set up drag events for reordering reorderable rules
+    if (!isTerminalRule) {
+      row.addEventListener("dragstart", (e) => {
+        draggingRow = row;
+        row.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", ""); // Required for Firefox
+      });
+
+      row.addEventListener("dragend", () => {
+        row.setAttribute("draggable", "false");
+        row.classList.remove("dragging");
+        draggingRow = null;
+
+        // Perform instant validation after sorting
+        const validation = validateRules(collectRules());
+        if (!validation.valid) {
+          setStatus("Rules reordered (invalid order):\n" + validation.errors.join("\n"), true);
+        } else {
+          setStatus("Rules reordered. Save to apply changes.", false);
+        }
+      });
+    }
+
+    // All rows handle dragover so draggingRow can be inserted relative to them
+    row.addEventListener("dragover", (e) => {
+      if (!draggingRow || draggingRow === row) {
+        return;
+      }
+      e.preventDefault();
+
+      if (isTerminalRule) {
+        // Dragging above the locked terminal rule
+        rulesContainer.insertBefore(draggingRow, row);
+      } else {
+        // Dragging over another reorderable rule; swap based on vertical mouse midpoint
+        const rect = row.getBoundingClientRect();
+        const middle = rect.top + rect.height / 2;
+        if (e.clientY < middle) {
+          rulesContainer.insertBefore(draggingRow, row);
+        } else {
+          rulesContainer.insertBefore(draggingRow, row.nextSibling);
+        }
+      }
+    });
+
+    row.append(handle, from, to, remove);
     return row;
   }
 
