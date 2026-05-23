@@ -459,6 +459,7 @@ button:focus-visible {
   justify-content: center;
   width: 100%;
   margin-top: 6px;
+  margin-bottom: 16px;
   border: 2px dashed var(--line-strong);
   border-radius: 14px;
   padding: 12px;

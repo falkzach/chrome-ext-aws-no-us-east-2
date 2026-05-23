@@ -183,8 +183,13 @@
       e.preventDefault();
 
       if (isTerminalRule) {
-        // Dragging above the locked terminal rule
-        rulesContainer.insertBefore(draggingRow, row);
+        // Dragging above the locked terminal rule (and therefore above the Add Rule button)
+        const addRuleBtn = rulesContainer.querySelector("#add-rule");
+        if (addRuleBtn) {
+          rulesContainer.insertBefore(draggingRow, addRuleBtn);
+        } else {
+          rulesContainer.insertBefore(draggingRow, row);
+        }
       } else {
         // Dragging over another reorderable rule; swap based on vertical mouse midpoint
         const rect = row.getBoundingClientRect();
@@ -208,7 +213,50 @@
       normalizedRules.push({ from: "*", to: "*" });
     }
 
-    rulesContainer.replaceChildren(...normalizedRules.map(createRuleRow));
+    const terminalRuleIndex = normalizedRules.findIndex(isTerminalPassThroughRule);
+    let reorderableRules = [];
+    let terminalRule = null;
+
+    if (terminalRuleIndex !== -1) {
+      terminalRule = normalizedRules[terminalRuleIndex];
+      reorderableRules = [
+        ...normalizedRules.slice(0, terminalRuleIndex),
+        ...normalizedRules.slice(terminalRuleIndex + 1)
+      ];
+    } else {
+      reorderableRules = normalizedRules;
+    }
+
+    const reorderableRows = reorderableRules.map(createRuleRow);
+
+    // Create the "Add Rewrite Rule" button dynamically
+    const addRuleBtn = document.createElement("button");
+    addRuleBtn.type = "button";
+    addRuleBtn.id = "add-rule";
+    addRuleBtn.className = "add-rule-row";
+    
+    const span = document.createElement("span");
+    span.textContent = "+ Add Rewrite Rule";
+    addRuleBtn.appendChild(span);
+
+    addRuleBtn.addEventListener("click", () => {
+      const newRow = createRuleRow({ from: "", to: "" });
+      rulesContainer.insertBefore(newRow, addRuleBtn);
+      setStatus("", false);
+    });
+
+    addRuleBtn.addEventListener("dragover", (e) => {
+      if (!draggingRow) return;
+      e.preventDefault();
+      rulesContainer.insertBefore(draggingRow, addRuleBtn);
+    });
+
+    const elementsToAppend = [...reorderableRows, addRuleBtn];
+    if (terminalRule) {
+      elementsToAppend.push(createRuleRow(terminalRule));
+    }
+
+    rulesContainer.replaceChildren(...elementsToAppend);
   }
 
   function collectRules() {
@@ -223,17 +271,7 @@
     renderRules(result[STORAGE_KEY] || DEFAULT_RULES);
   }
 
-  document.getElementById("add-rule").addEventListener("click", () => {
-    const terminalRule = rulesContainer.querySelector(".terminal-rule");
-    const newRow = createRuleRow({ from: "", to: "" });
-
-    if (terminalRule) {
-      rulesContainer.insertBefore(newRow, terminalRule);
-    } else {
-      rulesContainer.append(newRow);
-    }
-    setStatus("", false);
-  });
+  // Add rule click listener is now bound dynamically to the dynamically generated button in renderRules()
 
   document.getElementById("reset-rules").addEventListener("click", () => {
     renderRules(DEFAULT_RULES);

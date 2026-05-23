@@ -34,8 +34,19 @@ async function removeDynamicRules() {
 }
 
 async function updateBadge(enabled) {
-  await chrome.action.setBadgeText({ text: enabled ? "" : "OFF" });
-  await chrome.action.setBadgeBackgroundColor({ color: "#65717d" });
+  // Remove badge text completely
+  await chrome.action.setBadgeText({ text: "" });
+
+  // Dynamically swap between colored and desaturated off-icons
+  const suffix = enabled ? "" : "_off";
+  await chrome.action.setIcon({
+    path: {
+      "16": `icon16${suffix}.png`,
+      "32": `icon32${suffix}.png`,
+      "48": `icon48${suffix}.png`,
+      "128": `icon128${suffix}.png`
+    }
+  });
 }
 
 async function ensureRulesInstalled() {
