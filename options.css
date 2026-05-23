@@ -145,27 +145,37 @@ code {
 .route-line {
   position: absolute;
   z-index: 2;
-  left: 22px;
-  right: 54px;
-  top: 70px;
-  height: 16px;
+  left: 18px;
+  right: 68px;
+  top: 76px;
+  height: 4px;
   border-radius: var(--radius-round);
   background: var(--accent);
-  box-shadow: 0 12px 28px rgba(255, 153, 0, 0.24);
+  box-shadow: 0 4px 14px rgba(255, 153, 0, 0.3);
   transform: rotate(-18deg);
   transform-origin: center;
 }
 
+.route-line::before,
 .route-line::after {
   position: absolute;
-  right: -6px;
-  top: -10px;
-  width: 0;
-  height: 0;
-  border-top: 18px solid transparent;
-  border-bottom: 18px solid transparent;
-  border-left: 28px solid var(--accent);
+  right: -2px;
+  width: 16px;
+  height: 4px;
+  border-radius: var(--radius-round);
+  background: var(--accent);
   content: "";
+  transform-origin: right center;
+}
+
+.route-line::before {
+  top: -1px;
+  transform: rotate(-40deg);
+}
+
+.route-line::after {
+  top: 1px;
+  transform: rotate(40deg);
 }
 
 .route-dot {
