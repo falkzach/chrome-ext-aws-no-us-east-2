@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AWS Region Rewriter</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="popup">
+      <header>
+        <p class="eyebrow">AWS Region Rewriter</p>
+        <h1 id="state-label">Loading...</h1>
+      </header>
+
+      <label class="toggle-row">
+        <span>
+          <strong>Redirect rules</strong>
+          <small id="state-help">Checking current state</small>
+        </span>
+        <input id="enabled-toggle" type="checkbox" role="switch">
+      </label>
+
+      <button id="open-options" type="button">Edit Rules</button>
+    </main>
+
+    <script src="regions.js"></script>
+    <script src="ruleEngine.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

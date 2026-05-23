@@ -1,14 +1,30 @@
 {
-  "name": "AWS Console Region Rewriter (MV3)",
-  "description": "Force AWS Console links from us-east-2 to us-east-1.",
-  "version": "1.0.0",
+  "name": "AWS Region Rewriter",
+  "description": "Rewrite AWS Console regions using configurable ACL-style rules.",
+  "version": "1.1.0",
   "manifest_version": 3,
-  "permissions": ["declarativeNetRequest"],
-  "host_permissions": ["https://*.console.aws.amazon.com/*"],
-  "declarative_net_request": {
-    "rule_resources": [
-      { "id": "rules", "enabled": true, "path": "rules.json" }
-    ]
+  "permissions": ["declarativeNetRequest", "storage"],
+  "host_permissions": [
+    "https://console.aws.amazon.com/*",
+    "https://*.console.aws.amazon.com/*",
+    "https://console.amazonaws.cn/*",
+    "https://*.console.amazonaws.cn/*",
+    "https://*.console.amazonaws-us-gov.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
   },
   "icons": {
     "16": "icon16.png",

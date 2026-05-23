@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AWS Console Region Rewriter</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel editor-panel">
+        <header class="hero">
+          <div>
+            <p class="eyebrow">AWS Region Rewriter</p>
+            <h1>Route console regions intentionally.</h1>
+            <p class="lede">
+              Build first-match ACLs for AWS Console region redirects. Put specific rules first,
+              broader wildcard rules later, and keep <code>* -> *</code> as the safe default.
+            </p>
+          </div>
+          <div class="route-mark" aria-hidden="true">
+            <span class="route-dot source"></span>
+            <span class="route-line"></span>
+            <span class="route-dot target"></span>
+          </div>
+        </header>
+
+        <form id="rules-form">
+          <div class="rule-card">
+            <div class="rule-card-head">
+              <div>
+                <h2>Rewrite Rules</h2>
+                <p>Rules are evaluated top to bottom. Shadowed rules are rejected before saving.</p>
+              </div>
+              <button type="button" id="add-rule">Add Rule</button>
+            </div>
+
+            <div class="grid-header" aria-hidden="true">
+              <span>From</span>
+              <span>To</span>
+              <span></span>
+            </div>
+            <div id="rules"></div>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="reset-rules">Reset Defaults</button>
+            <button type="submit" class="primary">Save Rules</button>
+          </div>
+        </form>
+
+        <div id="status" role="status"></div>
+      </section>
+
+      <aside class="help panel">
+        <p class="eyebrow">Rule Guide</p>
+        <h2>Valid Patterns</h2>
+        <div class="example-list">
+          <code>us-east-2 -> us-east-1</code>
+          <code>us-* -> us-east-1</code>
+          <code>us-west-* -> us-east-1</code>
+          <code>* -> us-east-1</code>
+          <code>* -> *</code>
+        </div>
+        <h2>Constraints</h2>
+        <p>
+          Source wildcards are prefix-only. Destinations must be exact regions, except
+          <code>*</code> is allowed only for pass-through defaults.
+        </p>
+      </aside>
+    </main>
+
+    <datalist id="region-options"></datalist>
+
+    <script src="regions.js"></script>
+    <script src="ruleEngine.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
