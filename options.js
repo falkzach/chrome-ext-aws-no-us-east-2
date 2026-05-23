@@ -9,6 +9,17 @@
   const status = document.getElementById("status");
   const datalist = document.getElementById("region-options");
 
+  let originalRulesHash = "";
+
+  function checkChanges() {
+    const currentHash = JSON.stringify(collectRules());
+    const hasChanges = currentHash !== originalRulesHash;
+    const saveBtn = document.querySelector("button[type='submit'].primary");
+    if (saveBtn) {
+      saveBtn.disabled = !hasChanges;
+    }
+  }
+
   function setStatus(message, isError) {
     status.textContent = message;
     status.classList.toggle("error", Boolean(isError));
@@ -152,6 +163,7 @@
       remove.addEventListener("click", () => {
         row.remove();
         setStatus("", false);
+        checkChanges();
       });
     }
 
@@ -176,6 +188,7 @@
         } else {
           setStatus("Rules reordered. Save to apply changes.", false);
         }
+        checkChanges();
       });
     }
 
@@ -247,6 +260,7 @@
       const newRow = createRuleRow({ from: "", to: "" });
       rulesContainer.insertBefore(newRow, addRuleBtn);
       setStatus("", false);
+      checkChanges();
     });
 
     addRuleBtn.addEventListener("dragover", (e) => {
@@ -273,6 +287,8 @@
   async function loadRules() {
     const result = await chrome.storage.sync.get(STORAGE_KEY);
     renderRules(result[STORAGE_KEY] || DEFAULT_RULES);
+    originalRulesHash = JSON.stringify(collectRules());
+    checkChanges();
   }
 
   // Add rule click listener is now bound dynamically to the dynamically generated button in renderRules()
@@ -280,6 +296,7 @@
   document.getElementById("reset-rules").addEventListener("click", () => {
     renderRules(DEFAULT_RULES);
     setStatus("Defaults restored. Save to apply them.", false);
+    checkChanges();
   });
 
   form.addEventListener("submit", async (event) => {
@@ -292,7 +309,9 @@
     }
 
     await chrome.storage.sync.set({ [STORAGE_KEY]: validation.rules });
+    originalRulesHash = JSON.stringify(collectRules());
     setStatus("Saved. Dynamic rewrite rules have been updated.", false);
+    checkChanges();
   });
 
   const enabledToggle = document.getElementById("enabled-toggle");
@@ -370,4 +389,5 @@
   loadRules().catch((error) => setStatus(error.message, true));
   loadTheme().catch(console.error);
   loadEnabledState().catch(console.error);
+  rulesContainer.addEventListener("input", checkChanges);
 })();

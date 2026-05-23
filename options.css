@@ -29,6 +29,10 @@
   --code-bg: #fff6e8;
   --code-ink: #6a3d00;
   --code-border: rgba(255, 153, 0, 0.26);
+
+  /* Primary Button (Orange Theme) */
+  --btn-primary: var(--accent);
+  --btn-primary-hover: var(--accent-dark);
 }
 
 /* System Dark Mode (default, when no theme attribute is set or set to system) */
@@ -64,6 +68,7 @@
     --code-bg: #3a2200;
     --code-ink: #ffc97a;
     --code-border: rgba(255, 153, 0, 0.4);
+
   }
 }
 
@@ -99,6 +104,7 @@
   --code-bg: #3a2200;
   --code-ink: #ffc97a;
   --code-border: rgba(255, 153, 0, 0.4);
+
 }
 
 * {
@@ -474,9 +480,33 @@ button:focus-visible {
 }
 
 .primary {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-ink);
+  border-color: var(--btn-primary);
+  background: var(--btn-primary);
+  color: white;
+}
+
+.primary:hover {
+  border-color: var(--btn-primary-hover);
+  background: var(--btn-primary-hover);
+  color: white;
+}
+
+.primary:disabled {
+  border-color: var(--line);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.6;
+}
+
+.primary:disabled:hover {
+  border-color: var(--line);
+  background: var(--bg);
+  color: var(--muted);
+  box-shadow: none;
+  transform: none;
 }
 
 .add-rule-row {
