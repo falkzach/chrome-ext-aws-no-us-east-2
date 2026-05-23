@@ -1,18 +1,104 @@
 :root {
+  /* Light Theme Variables */
   --bg: #edf2f4;
   --bg-deep: #17232e;
   --ink: #15202a;
   --muted: #65717d;
   --panel: #ffffff;
   --panel-soft: #f7f9fb;
+  --panel-bg-glass: rgba(255, 255, 255, 0.9);
   --line: #dbe3ea;
   --line-strong: #c6d1db;
   --accent: #ff9900;
   --accent-dark: #c56f00;
   --accent-ink: #1e1608;
   --danger: #c2412d;
+  --danger-soft: #fff7f5;
+  --danger-border: #f0cbc4;
   --focus: rgba(255, 153, 0, 0.32);
   --shadow: 0 24px 80px rgba(15, 31, 46, 0.16);
+
+  /* Background Gradient Variables */
+  --grad-bg-1: rgba(255, 153, 0, 0.22);
+  --grad-bg-2: rgba(36, 80, 110, 0.24);
+  --grad-bg-main-start: #f8fafc;
+  --grad-bg-main-middle: var(--bg);
+  --grad-bg-main-end: #dbe5eb;
+
+  /* Code Blocks */
+  --code-bg: #fff6e8;
+  --code-ink: #6a3d00;
+  --code-border: rgba(255, 153, 0, 0.26);
+}
+
+/* System Dark Mode (default, when no theme attribute is set or set to system) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Dark Theme Variables */
+    --bg: #0f171e;
+    --bg-deep: #080c10;
+    --ink: #e3e8ec;
+    --muted: #8898a6;
+    --panel: #15202b;
+    --panel-soft: #192734;
+    --panel-bg-glass: rgba(21, 32, 43, 0.85);
+    --line: #38444d;
+    --line-strong: #4e5d6c;
+    --accent: #ff9900;
+    --accent-dark: #ffb84d;
+    --accent-ink: #15202b;
+    --danger: #e0245e;
+    --danger-soft: #3a1c1c;
+    --danger-border: #5c2c2c;
+    --focus: rgba(255, 153, 0, 0.45);
+    --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+
+    /* Background Gradient Variables */
+    --grad-bg-1: rgba(255, 153, 0, 0.08);
+    --grad-bg-2: rgba(36, 80, 110, 0.15);
+    --grad-bg-main-start: #0c1015;
+    --grad-bg-main-middle: #0f171e;
+    --grad-bg-main-end: #070a0e;
+
+    /* Code Blocks */
+    --code-bg: #3a2200;
+    --code-ink: #ffc97a;
+    --code-border: rgba(255, 153, 0, 0.4);
+  }
+}
+
+/* Forced Dark Mode */
+:root[data-theme="dark"] {
+  /* Dark Theme Variables */
+  --bg: #0f171e;
+  --bg-deep: #080c10;
+  --ink: #e3e8ec;
+  --muted: #8898a6;
+  --panel: #15202b;
+  --panel-soft: #192734;
+  --panel-bg-glass: rgba(21, 32, 43, 0.85);
+  --line: #38444d;
+  --line-strong: #4e5d6c;
+  --accent: #ff9900;
+  --accent-dark: #ffb84d;
+  --accent-ink: #15202b;
+  --danger: #e0245e;
+  --danger-soft: #3a1c1c;
+  --danger-border: #5c2c2c;
+  --focus: rgba(255, 153, 0, 0.45);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+
+  /* Background Gradient Variables */
+  --grad-bg-1: rgba(255, 153, 0, 0.08);
+  --grad-bg-2: rgba(36, 80, 110, 0.15);
+  --grad-bg-main-start: #0c1015;
+  --grad-bg-main-middle: #0f171e;
+  --grad-bg-main-end: #070a0e;
+
+  /* Code Blocks */
+  --code-bg: #3a2200;
+  --code-ink: #ffc97a;
+  --code-border: rgba(255, 153, 0, 0.4);
 }
 
 * {
@@ -21,13 +107,17 @@
 
 body {
   min-width: 760px;
+  min-height: 100vh;
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 14% 12%, rgba(255, 153, 0, 0.22), transparent 24rem),
-    radial-gradient(circle at 84% 18%, rgba(36, 80, 110, 0.24), transparent 26rem),
-    linear-gradient(135deg, #f8fafc 0%, var(--bg) 48%, #dbe5eb 100%);
+    radial-gradient(circle at 14% 12%, var(--grad-bg-1), transparent 24rem),
+    radial-gradient(circle at 84% 18%, var(--grad-bg-2), transparent 26rem),
+    linear-gradient(135deg, var(--grad-bg-main-start) 0%, var(--grad-bg-main-middle) 48%, var(--grad-bg-main-end) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   font: 14px/1.5 "Aptos", "Segoe UI", sans-serif;
+  transition: background 140ms ease, color 140ms ease;
 }
 
 button,
@@ -37,9 +127,9 @@ input {
 
 .shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 20px;
-  max-width: 980px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
 }
@@ -47,9 +137,10 @@ input {
 .panel {
   border: 1px solid var(--line);
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--panel-bg-glass);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
+  transition: background 140ms ease, border-color 140ms ease;
 }
 
 .editor-panel {
@@ -117,13 +208,14 @@ h2 {
 }
 
 code {
-  border: 1px solid rgba(255, 153, 0, 0.26);
+  border: 1px solid var(--code-border);
   border-radius: 8px;
   padding: 2px 7px;
-  background: #fff6e8;
-  color: #6a3d00;
+  background: var(--code-bg);
+  color: var(--code-ink);
   font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   font-size: 0.92em;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
 }
 
 .hero code {
@@ -213,7 +305,7 @@ code {
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1fr) 42px;
   gap: 10px;
-  align-items: center;
+  align-items: start;
 }
 
 .grid-header {
@@ -226,7 +318,7 @@ code {
 }
 
 .rule-row {
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   transition: transform 140ms ease, opacity 140ms ease;
 }
 
@@ -269,6 +361,28 @@ code {
   box-shadow: none;
 }
 
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.region-desc {
+  font-size: 11px;
+  color: var(--muted);
+  padding-left: 8px;
+  min-height: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 140ms ease;
+}
+
+.region-desc.invalid {
+  color: var(--danger);
+}
+
 .terminal-rule {
   position: relative;
   padding-top: 12px;
@@ -289,10 +403,10 @@ input {
   border: 1px solid var(--line-strong);
   border-radius: 14px;
   padding: 11px 13px;
-  background: white;
+  background: var(--panel);
   color: var(--ink);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
-  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease, color 140ms ease;
 }
 
 input:focus {
@@ -301,7 +415,7 @@ input:focus {
 }
 
 input:hover {
-  border-color: #aebdca;
+  border-color: var(--line-strong);
 }
 
 .actions {
@@ -315,11 +429,11 @@ button {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 10px 15px;
-  background: white;
+  background: var(--panel);
   color: var(--ink);
   cursor: pointer;
   font-weight: 700;
-  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease, color 140ms ease;
 }
 
 button:hover {
@@ -339,20 +453,48 @@ button:focus-visible {
   color: var(--accent-ink);
 }
 
+.add-rule-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 6px;
+  border: 2px dashed var(--line-strong);
+  border-radius: 14px;
+  padding: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.add-rule-row:hover {
+  border-color: var(--accent);
+  background: rgba(255, 153, 0, 0.04);
+  color: var(--accent-dark);
+  box-shadow: none;
+  transform: none;
+}
+
+.add-rule-row:active {
+  background: rgba(255, 153, 0, 0.08);
+}
+
 .remove-rule {
   width: 42px;
   height: 42px;
   padding: 0;
   color: var(--danger);
-  background: #fff7f5;
-  border-color: #f0cbc4;
+  background: var(--danger-soft);
+  border-color: var(--danger-border);
   font-size: 18px;
   line-height: 1;
 }
 
 .remove-rule:disabled {
-  color: #9aa7b2;
-  background: #eef3f6;
+  color: var(--muted);
+  background: var(--bg);
   border-color: var(--line);
   cursor: not-allowed;
   opacity: 0.75;

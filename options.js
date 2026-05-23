@@ -15,9 +15,16 @@
   }
 
   function populateDatalist() {
-    ["*"].concat(ALL_DESTINATIONS.map((region) => region.code)).forEach((code) => {
+    // Catch-all default option description
+    const defaultOpt = document.createElement("option");
+    defaultOpt.value = "*";
+    defaultOpt.textContent = "All unmatched regions (*)";
+    datalist.append(defaultOpt);
+
+    ALL_DESTINATIONS.forEach((region) => {
       const option = document.createElement("option");
-      option.value = code;
+      option.value = region.code;
+      option.textContent = `${region.name} (${region.code})`;
       datalist.append(option);
     });
   }
@@ -27,6 +34,43 @@
   }
 
   let draggingRow = null;
+
+  function updateRegionDescription(input, descSpan, type) {
+    const value = input.value.trim().toLowerCase();
+    if (!value) {
+      descSpan.textContent = "";
+      descSpan.classList.remove("invalid");
+      return;
+    }
+
+    if (value === "*") {
+      descSpan.textContent = type === "from" ? "All unmatched regions" : "Pass through unchanged";
+      descSpan.classList.remove("invalid");
+      return;
+    }
+
+    if (value.endsWith("*")) {
+      const prefix = value.slice(0, -1);
+      const matches = ALL_DESTINATIONS.filter((r) => r.code.startsWith(prefix));
+      if (matches.length > 0) {
+        descSpan.textContent = `All regions starting with "${prefix}" (${matches.length} matches)`;
+        descSpan.classList.remove("invalid");
+      } else {
+        descSpan.textContent = "No matching regions for this prefix";
+        descSpan.classList.add("invalid");
+      }
+      return;
+    }
+
+    const found = ALL_DESTINATIONS.find((r) => r.code === value);
+    if (found) {
+      descSpan.textContent = found.name;
+      descSpan.classList.remove("invalid");
+    } else {
+      descSpan.textContent = "Unknown region code";
+      descSpan.classList.add("invalid");
+    }
+  }
 
   function createRuleRow(rule) {
     const row = document.createElement("div");
@@ -57,17 +101,39 @@
       });
     }
 
+    const fromWrapper = document.createElement("div");
+    fromWrapper.className = "input-wrapper";
+
     const from = document.createElement("input");
     from.name = "from";
     from.placeholder = "us-east-2, us-*, or *";
     from.setAttribute("list", "region-options");
     from.value = rule.from || "";
 
+    const fromDesc = document.createElement("span");
+    fromDesc.className = "region-desc";
+
+    fromWrapper.append(from, fromDesc);
+
+    from.addEventListener("input", () => updateRegionDescription(from, fromDesc, "from"));
+    updateRegionDescription(from, fromDesc, "from");
+
+    const toWrapper = document.createElement("div");
+    toWrapper.className = "input-wrapper";
+
     const to = document.createElement("input");
     to.name = "to";
     to.placeholder = "us-east-1 or *";
     to.setAttribute("list", "region-options");
     to.value = rule.to || "";
+
+    const toDesc = document.createElement("span");
+    toDesc.className = "region-desc";
+
+    toWrapper.append(to, toDesc);
+
+    to.addEventListener("input", () => updateRegionDescription(to, toDesc, "to"));
+    updateRegionDescription(to, toDesc, "to");
 
     const remove = document.createElement("button");
     remove.type = "button";
@@ -131,7 +197,7 @@
       }
     });
 
-    row.append(handle, from, to, remove);
+    row.append(handle, fromWrapper, toWrapper, remove);
     return row;
   }
 
@@ -187,6 +253,20 @@
     setStatus("Saved. Dynamic redirect rules have been updated.", false);
   });
 
+  async function loadTheme() {
+    const result = await chrome.storage.sync.get("theme");
+    const theme = result.theme || "system";
+    document.documentElement.setAttribute("data-theme", theme);
+  }
+
+  // Listen for storage changes to sync theme if changed in popup
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "sync" && changes.theme) {
+      document.documentElement.setAttribute("data-theme", changes.theme.newValue || "system");
+    }
+  });
+
   populateDatalist();
   loadRules().catch((error) => setStatus(error.message, true));
+  loadTheme().catch(console.error);
 })();

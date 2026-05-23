@@ -7,6 +7,7 @@
   const stateLabel = document.getElementById("state-label");
   const stateHelp = document.getElementById("state-help");
   const openOptions = document.getElementById("open-options");
+  const segments = document.querySelectorAll(".segment-btn");
 
   function render(enabled) {
     toggle.checked = enabled;
@@ -16,9 +17,24 @@
       : "Saved rules are paused.";
   }
 
+  function updateThemeUI(activeTheme) {
+    segments.forEach((btn) => {
+      const isSelected = btn.getAttribute("data-theme-val") === activeTheme;
+      btn.classList.toggle("active", isSelected);
+      btn.setAttribute("aria-checked", isSelected ? "true" : "false");
+    });
+  }
+
   async function loadState() {
-    const result = await chrome.storage.sync.get(ENABLED_STORAGE_KEY);
-    render(result[ENABLED_STORAGE_KEY] !== false);
+    // Load enabled state
+    const enabledResult = await chrome.storage.sync.get(ENABLED_STORAGE_KEY);
+    render(enabledResult[ENABLED_STORAGE_KEY] !== false);
+
+    // Load theme state
+    const themeResult = await chrome.storage.sync.get("theme");
+    const theme = themeResult.theme || "system";
+    updateThemeUI(theme);
+    document.documentElement.setAttribute("data-theme", theme);
   }
 
   toggle.addEventListener("change", async () => {
@@ -27,8 +43,26 @@
     await chrome.storage.sync.set({ [ENABLED_STORAGE_KEY]: enabled });
   });
 
+  segments.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const selectedTheme = btn.getAttribute("data-theme-val");
+      updateThemeUI(selectedTheme);
+      document.documentElement.setAttribute("data-theme", selectedTheme);
+      await chrome.storage.sync.set({ theme: selectedTheme });
+    });
+  });
+
   openOptions.addEventListener("click", () => {
     chrome.runtime.openOptionsPage();
+  });
+
+  // Listen for storage changes to sync theme if changed in options page
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "sync" && changes.theme) {
+      const theme = changes.theme.newValue || "system";
+      updateThemeUI(theme);
+      document.documentElement.setAttribute("data-theme", theme);
+    }
   });
 
   loadState();
