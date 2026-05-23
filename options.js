@@ -135,6 +135,10 @@
     to.addEventListener("input", () => updateRegionDescription(to, toDesc, "to"));
     updateRegionDescription(to, toDesc, "to");
 
+    const arrow = document.createElement("div");
+    arrow.className = "routing-arrow";
+    arrow.innerHTML = "➔";
+
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "remove-rule";
@@ -202,7 +206,7 @@
       }
     });
 
-    row.append(handle, fromWrapper, toWrapper, remove);
+    row.append(handle, fromWrapper, arrow, toWrapper, remove);
     return row;
   }
 
@@ -291,20 +295,75 @@
     setStatus("Saved. Dynamic redirect rules have been updated.", false);
   });
 
+  const enabledToggle = document.getElementById("enabled-toggle");
+  const stateHelp = document.getElementById("state-help");
+
+  function updateEnabledUI(enabled) {
+    if (enabledToggle) {
+      enabledToggle.checked = enabled;
+    }
+    if (stateHelp) {
+      stateHelp.textContent = enabled ? "Active" : "Paused";
+      stateHelp.className = enabled ? "active" : "paused";
+    }
+  }
+
+  async function loadEnabledState() {
+    const result = await chrome.storage.sync.get("enabled");
+    const enabled = result.hasOwnProperty("enabled") ? result.enabled : true;
+    updateEnabledUI(enabled);
+  }
+
+  if (enabledToggle) {
+    enabledToggle.addEventListener("change", async () => {
+      const enabled = enabledToggle.checked;
+      await chrome.storage.sync.set({ enabled });
+      updateEnabledUI(enabled);
+    });
+  }
+
+  function updateThemeUI(theme) {
+    const buttons = document.querySelectorAll(".controls-panel .segment-btn");
+    buttons.forEach((btn) => {
+      const isActive = btn.getAttribute("data-theme-val") === theme;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-checked", isActive ? "true" : "false");
+    });
+  }
+
   async function loadTheme() {
     const result = await chrome.storage.sync.get("theme");
     const theme = result.theme || "system";
     document.documentElement.setAttribute("data-theme", theme);
+    updateThemeUI(theme);
   }
 
-  // Listen for storage changes to sync theme if changed in popup
+  // Wire up theme segmented buttons click handlers
+  document.querySelectorAll(".controls-panel .segment-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const val = btn.getAttribute("data-theme-val");
+      await chrome.storage.sync.set({ theme: val });
+      document.documentElement.setAttribute("data-theme", val);
+      updateThemeUI(val);
+    });
+  });
+
+  // Listen for storage changes to sync theme/enabled if changed in popup or other tabs
   chrome.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName === "sync" && changes.theme) {
-      document.documentElement.setAttribute("data-theme", changes.theme.newValue || "system");
+    if (areaName === "sync") {
+      if (changes.theme) {
+        const newTheme = changes.theme.newValue || "system";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        updateThemeUI(newTheme);
+      }
+      if (changes.enabled) {
+        updateEnabledUI(changes.enabled.newValue);
+      }
     }
   });
 
   populateDatalist();
   loadRules().catch((error) => setStatus(error.message, true));
   loadTheme().catch(console.error);
+  loadEnabledState().catch(console.error);
 })();

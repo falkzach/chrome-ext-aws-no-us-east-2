@@ -126,11 +126,15 @@ input {
 }
 
 .shell {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.dashboard-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
   gap: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 24px;
 }
 
@@ -143,13 +147,24 @@ input {
   transition: background 140ms ease, border-color 140ms ease;
 }
 
-.editor-panel {
-  padding: 24px;
+.editor-section {
+  display: flex;
+  flex-direction: column;
 }
 
-.help {
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   align-self: start;
-  padding: 22px;
+}
+
+.inner-pane {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  background: var(--panel-soft);
+  transition: background 140ms ease, border-color 140ms ease;
 }
 
 .hero {
@@ -157,7 +172,8 @@ input {
   grid-template-columns: minmax(0, 1fr) 170px;
   gap: 22px;
   align-items: center;
-  margin-bottom: 22px;
+  height: 180px; /* Force-align height with controls-panel */
+  margin-bottom: 24px; /* Align vertical gap with sidebar-section */
   padding: 26px;
   border-radius: 20px;
   overflow: hidden;
@@ -183,7 +199,7 @@ p {
 }
 
 h1 {
-  max-width: 520px;
+  max-width: none;
   margin-bottom: 12px;
   font-size: 36px;
   line-height: 1.03;
@@ -303,9 +319,19 @@ code {
 .grid-header,
 .rule-row {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1fr) 42px;
+  grid-template-columns: 24px 220px 32px 220px 42px;
   gap: 10px;
   align-items: start;
+}
+
+.routing-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px; /* Aligns perfectly with input heights */
+  color: var(--muted);
+  font-size: 16px;
+  user-select: none;
 }
 
 .grid-header {
@@ -398,7 +424,7 @@ code {
   content: "";
 }
 
-input {
+input:not([type="checkbox"]) {
   width: 100%;
   border: 1px solid var(--line-strong);
   border-radius: 14px;
@@ -409,12 +435,12 @@ input {
   transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease, color 140ms ease;
 }
 
-input:focus {
+input:not([type="checkbox"]):focus {
   outline: 3px solid var(--focus);
   border-color: var(--accent);
 }
 
-input:hover {
+input:not([type="checkbox"]):hover {
   border-color: var(--line-strong);
 }
 
@@ -458,6 +484,7 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 538px;
   margin-top: 6px;
   margin-bottom: 16px;
   border: 2px dashed var(--line-strong);
@@ -537,7 +564,7 @@ button:focus-visible {
     min-width: 0;
   }
 
-  .shell {
+  .dashboard-card {
     grid-template-columns: 1fr;
     padding: 14px;
   }
@@ -549,4 +576,149 @@ button:focus-visible {
   .route-mark {
     display: none;
   }
+
+  .controls-panel {
+    height: auto;
+    min-height: 140px;
+  }
+}
+
+/* ==========================================================================
+   Controls Sidebar (Toggles & Segmented Buttons)
+   ========================================================================== */
+
+.controls-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px;
+  height: 180px; /* Aligns visually with the Left Hero panel */
+  align-items: stretch;
+}
+
+.controls-panel .eyebrow {
+  grid-column: 1 / -1;
+  margin-bottom: 6px; /* Elegant padding under configs heading */
+  text-align: left;
+  color: var(--muted);
+}
+
+.control-pane {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  text-align: center;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.control-pane .pane-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.switch-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#state-help {
+  font-size: 12px;
+  font-weight: 700;
+  transition: color 140ms ease;
+}
+
+#state-help.active {
+  color: var(--accent-dark);
+}
+
+#state-help.paused {
+  color: var(--muted);
+}
+
+/* Checkbox Switch Toggle */
+.control-pane input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--line-strong);
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 140ms ease;
+}
+
+.control-pane input[type="checkbox"]::after {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 6px rgba(15, 31, 46, 0.22);
+  content: "";
+  transition: transform 140ms ease;
+}
+
+.control-pane input[type="checkbox"]:checked {
+  background: var(--accent);
+}
+
+.control-pane input[type="checkbox"]:checked::after {
+  transform: translateX(20px);
+}
+
+/* Segmented Theme Control (Apple style) */
+.segmented-control {
+  display: flex;
+  background: var(--line);
+  border-radius: 20px;
+  padding: 2px;
+  transition: background 140ms ease;
+  flex-shrink: 0;
+}
+
+.segmented-control button.segment-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: none;
+  border-radius: 18px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: none;
+  transform: none;
+  transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+.segmented-control button.segment-btn:hover {
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  color: var(--ink);
+}
+
+.segmented-control button.segment-btn.active {
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(15, 31, 46, 0.08);
 }
