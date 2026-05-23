@@ -84,7 +84,7 @@
   /* Design Tokens: Typography */
   --font-sans: "Aptos", "Segoe UI", sans-serif;
   --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
-  --size-h1: 36px;
+  --size-h1: clamp(22px, 2.4vw + 12px, 36px);
   --size-h2: 18px;
   --size-base: 14px;
   --size-label: 12px;

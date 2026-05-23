@@ -28,27 +28,46 @@
           </header>
 
           <form id="rules-form">
-            <div class="rule-card">
-              <div class="rule-card-head">
-                <div>
-                  <h2>Rewrite Rules</h2>
-                  <p>Rules are evaluated top to bottom. Shadowed rules are rejected before saving.</p>
+            <div class="rules-layout">
+              <div class="rule-card">
+                <div class="rule-card-head">
+                  <div>
+                    <h2>Rewrite Rules</h2>
+                    <p>Rules are evaluated top to bottom. Shadowed rules are rejected before saving.</p>
+                  </div>
+                </div>
+
+                <div class="grid-header" aria-hidden="true">
+                  <span></span>
+                  <span>From</span>
+                  <span></span>
+                  <span>To</span>
+                  <span></span>
+                </div>
+                <div id="rules"></div>
+
+                <div class="actions">
+                  <button type="button" id="reset-rules">Reset Defaults</button>
+                  <button type="submit" class="primary">Save Rules</button>
                 </div>
               </div>
 
-              <div class="grid-header" aria-hidden="true">
-                <span></span>
-                <span>From</span>
-                <span></span>
-                <span>To</span>
-                <span></span>
-              </div>
-              <div id="rules"></div>
-            </div>
-
-            <div class="actions">
-              <button type="button" id="reset-rules">Reset Defaults</button>
-              <button type="submit" class="primary">Save Rules</button>
+              <section class="help inner-pane">
+                <p class="eyebrow">Rule Guide</p>
+                <h2>Valid Patterns</h2>
+                <div class="example-list">
+                  <code>us-east-2 -> us-east-1</code>
+                  <code>us-* -> us-east-1</code>
+                  <code>us-west-* -> us-east-1</code>
+                  <code>* -> us-east-1</code>
+                  <code>* -> *</code>
+                </div>
+                <h2>Constraints</h2>
+                <p>
+                  Source wildcards are prefix-only. Destinations must be exact regions, except
+                  <code>*</code> is allowed only for pass-through defaults.
+                </p>
+              </section>
             </div>
           </form>
 
@@ -134,23 +153,6 @@
                 <input type="checkbox" id="group-china">
               </div>
             </div>
-          </section>
-
-          <section class="help inner-pane">
-            <p class="eyebrow">Rule Guide</p>
-            <h2>Valid Patterns</h2>
-            <div class="example-list">
-              <code>us-east-2 -> us-east-1</code>
-              <code>us-* -> us-east-1</code>
-              <code>us-west-* -> us-east-1</code>
-              <code>* -> us-east-1</code>
-              <code>* -> *</code>
-            </div>
-            <h2>Constraints</h2>
-            <p>
-              Source wildcards are prefix-only. Destinations must be exact regions, except
-              <code>*</code> is allowed only for pass-through defaults.
-            </p>
           </section>
         </aside>
       </div>
