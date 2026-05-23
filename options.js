@@ -11,6 +11,9 @@
 
   let originalRulesHash = "";
 
+  const DEFAULT_REGION_GROUPS = { core: true, optIn: true, gov: false, china: false };
+  let activeRegionGroups = { ...DEFAULT_REGION_GROUPS };
+
   function checkChanges() {
     const currentHash = JSON.stringify(collectRules());
     const hasChanges = currentHash !== originalRulesHash;
@@ -26,13 +29,15 @@
   }
 
   function populateDatalist() {
+    datalist.replaceChildren();
+
     // Catch-all default option description
     const defaultOpt = document.createElement("option");
     defaultOpt.value = "*";
     defaultOpt.textContent = "All unmatched regions (*)";
     datalist.append(defaultOpt);
 
-    ALL_DESTINATIONS.forEach((region) => {
+    ALL_DESTINATIONS.filter(isRegionGroupEnabled).forEach((region) => {
       const option = document.createElement("option");
       option.value = region.code;
       option.textContent = `${region.name} (${region.code})`;
@@ -45,6 +50,32 @@
   }
 
   let draggingRow = null;
+
+  function isRegionGroupEnabled(region) {
+    if (!region || !region.group) return true;
+    const grp = region.group;
+    if (grp === "core") return activeRegionGroups.core;
+    if (grp === "opt-in") return activeRegionGroups.optIn;
+    if (grp === "gov") return activeRegionGroups.gov;
+    if (grp === "china") return activeRegionGroups.china;
+    return true;
+  }
+
+  function revalidateAllDescriptions() {
+    rulesContainer.querySelectorAll(".rule-row").forEach((row) => {
+      const fromInput = row.querySelector("input[name='from']");
+      const fromDesc = fromInput ? fromInput.nextElementSibling : null;
+      if (fromInput && fromDesc) {
+        updateRegionDescription(fromInput, fromDesc, "from");
+      }
+
+      const toInput = row.querySelector("input[name='to']");
+      const toDesc = toInput ? toInput.nextElementSibling : null;
+      if (toInput && toDesc) {
+        updateRegionDescription(toInput, toDesc, "to");
+      }
+    });
+  }
 
   function updateRegionDescription(input, descSpan, type) {
     const value = input.value.trim().toLowerCase();
@@ -63,11 +94,14 @@
     if (value.endsWith("*")) {
       const prefix = value.slice(0, -1);
       const matches = ALL_DESTINATIONS.filter((r) => r.code.startsWith(prefix));
-      if (matches.length > 0) {
-        descSpan.textContent = `All regions starting with "${prefix}" (${matches.length} matches)`;
+      const enabledMatches = matches.filter(isRegionGroupEnabled);
+      if (enabledMatches.length > 0) {
+        descSpan.textContent = `All active regions starting with "${prefix}" (${enabledMatches.length} matches)`;
         descSpan.classList.remove("invalid");
       } else {
-        descSpan.textContent = "No matching regions for this prefix";
+        descSpan.textContent = matches.length > 0
+          ? `All matching regions are disabled in configs`
+          : `No matching regions for this prefix`;
         descSpan.classList.add("invalid");
       }
       return;
@@ -75,8 +109,13 @@
 
     const found = ALL_DESTINATIONS.find((r) => r.code === value);
     if (found) {
-      descSpan.textContent = found.name;
-      descSpan.classList.remove("invalid");
+      if (isRegionGroupEnabled(found)) {
+        descSpan.textContent = found.name;
+        descSpan.classList.remove("invalid");
+      } else {
+        descSpan.textContent = `${found.name} (Region group is disabled in configs)`;
+        descSpan.classList.add("invalid");
+      }
     } else {
       descSpan.textContent = "Unknown region code";
       descSpan.classList.add("invalid");
@@ -371,7 +410,7 @@
     });
   });
 
-  // Listen for storage changes to sync theme/enabled if changed in popup or other tabs
+  // Listen for storage changes to sync theme/enabled/regionGroups if changed in popup or other tabs
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "sync") {
       if (changes.theme) {
@@ -382,11 +421,61 @@
       if (changes.enabled) {
         updateEnabledUI(changes.enabled.newValue);
       }
+      if (changes.regionGroups) {
+        activeRegionGroups = { ...DEFAULT_REGION_GROUPS, ...changes.regionGroups.newValue };
+        updateRegionGroupsUI(activeRegionGroups);
+        populateDatalist();
+        revalidateAllDescriptions();
+      }
     }
   });
 
-  populateDatalist();
-  loadRules().catch((error) => setStatus(error.message, true));
+  // === Region Groups Visibility Controller ===
+
+  const regionGroupToggles = {
+    core: document.getElementById("group-core"),
+    optIn: document.getElementById("group-opt-in"),
+    gov: document.getElementById("group-gov"),
+    china: document.getElementById("group-china")
+  };
+
+  function updateRegionGroupsUI(groups) {
+    if (regionGroupToggles.core) regionGroupToggles.core.checked = groups.core;
+    if (regionGroupToggles.optIn) regionGroupToggles.optIn.checked = groups.optIn;
+    if (regionGroupToggles.gov) regionGroupToggles.gov.checked = groups.gov;
+    if (regionGroupToggles.china) regionGroupToggles.china.checked = groups.china;
+  }
+
+  async function loadRegionGroups() {
+    const result = await chrome.storage.sync.get("regionGroups");
+    activeRegionGroups = { ...DEFAULT_REGION_GROUPS, ...result.regionGroups };
+    updateRegionGroupsUI(activeRegionGroups);
+  }
+
+  async function onRegionGroupToggle() {
+    activeRegionGroups = {
+      core: regionGroupToggles.core ? regionGroupToggles.core.checked : true,
+      optIn: regionGroupToggles.optIn ? regionGroupToggles.optIn.checked : true,
+      gov: regionGroupToggles.gov ? regionGroupToggles.gov.checked : false,
+      china: regionGroupToggles.china ? regionGroupToggles.china.checked : false
+    };
+    await chrome.storage.sync.set({ regionGroups: activeRegionGroups });
+    populateDatalist();
+    revalidateAllDescriptions();
+  }
+
+  Object.values(regionGroupToggles).forEach((toggle) => {
+    if (toggle) toggle.addEventListener("change", onRegionGroupToggle);
+  });
+
+  // === Initialization ===
+
+  loadRegionGroups()
+    .then(() => {
+      populateDatalist();
+      return loadRules();
+    })
+    .catch((error) => setStatus(error.message, true));
   loadTheme().catch(console.error);
   loadEnabledState().catch(console.error);
   rulesContainer.addEventListener("input", checkChanges);
