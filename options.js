@@ -292,19 +292,20 @@
     }
 
     await chrome.storage.sync.set({ [STORAGE_KEY]: validation.rules });
-    setStatus("Saved. Dynamic redirect rules have been updated.", false);
+    setStatus("Saved. Dynamic rewrite rules have been updated.", false);
   });
 
   const enabledToggle = document.getElementById("enabled-toggle");
   const stateHelp = document.getElementById("state-help");
+  const themeHelp = document.getElementById("theme-help");
 
   function updateEnabledUI(enabled) {
     if (enabledToggle) {
       enabledToggle.checked = enabled;
     }
     if (stateHelp) {
-      stateHelp.textContent = enabled ? "Active" : "Paused";
-      stateHelp.className = enabled ? "active" : "paused";
+      stateHelp.textContent = enabled ? "Active" : "Disabled";
+      stateHelp.className = enabled ? "active" : "disabled";
     }
   }
 
@@ -329,6 +330,9 @@
       btn.classList.toggle("active", isActive);
       btn.setAttribute("aria-checked", isActive ? "true" : "false");
     });
+    if (themeHelp) {
+      themeHelp.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+    }
   }
 
   async function loadTheme() {

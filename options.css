@@ -625,6 +625,7 @@ button:focus-visible {
   margin-bottom: 6px;
 }
 
+.theme-wrapper,
 .switch-wrapper {
   display: flex;
   flex-direction: column;
@@ -632,9 +633,11 @@ button:focus-visible {
   gap: 8px;
 }
 
+#theme-help,
 #state-help {
   font-size: 12px;
   font-weight: 700;
+  color: var(--muted);
   transition: color 140ms ease;
 }
 
@@ -642,7 +645,7 @@ button:focus-visible {
   color: var(--accent-dark);
 }
 
-#state-help.paused {
+#state-help.disabled {
   color: var(--muted);
 }
 

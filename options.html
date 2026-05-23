@@ -15,7 +15,7 @@
               <p class="eyebrow">AWS Region Rewriter</p>
               <h1>Route console regions intentionally</h1>
               <p class="lede">
-                Build first-match ACLs for AWS Console region redirects. Put specific rules first,
+                Build first-match ACLs for AWS Console region rewrites. Put specific rules first,
                 broader wildcard rules later, and keep <code>* -> *</code> as the safe default.
               </p>
             </div>
@@ -58,40 +58,43 @@
           <section class="controls-panel inner-pane">
             <p class="eyebrow">Configs</p>
             <div class="control-pane status-pane">
-              <span class="pane-title">Redirects</span>
+              <span class="pane-title">Rewrites</span>
               <div class="switch-wrapper">
                 <input id="enabled-toggle" type="checkbox" role="switch">
                 <span id="state-help">Active</span>
               </div>
             </div>
-            <div class="control-pane theme-pane">
+             <div class="control-pane theme-pane">
               <span class="pane-title">Theme</span>
-              <div class="segmented-control" role="radiogroup" aria-label="Theme Selector">
-                <button type="button" class="segment-btn" data-theme-val="light" aria-checked="false" role="radio" title="Light Theme" aria-label="Light Theme">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                  </svg>
-                </button>
-                <button type="button" class="segment-btn" data-theme-val="system" aria-checked="true" role="radio" title="System Theme" aria-label="System Theme">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="2" y1="20" x2="22" y2="20"></line>
-                    <line x1="12" y1="17" x2="12" y2="20"></line>
-                  </svg>
-                </button>
-                <button type="button" class="segment-btn" data-theme-val="dark" aria-checked="false" role="radio" title="Dark Theme" aria-label="Dark Theme">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                  </svg>
-                </button>
+              <div class="theme-wrapper">
+                <div class="segmented-control" role="radiogroup" aria-label="Theme Selector">
+                  <button type="button" class="segment-btn" data-theme-val="light" aria-checked="false" role="radio" title="Light Theme" aria-label="Light Theme">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="5"></circle>
+                      <line x1="12" y1="1" x2="12" y2="3"></line>
+                      <line x1="12" y1="21" x2="12" y2="23"></line>
+                      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                      <line x1="1" y1="12" x2="3" y2="12"></line>
+                      <line x1="21" y1="12" x2="23" y2="12"></line>
+                      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                  </button>
+                  <button type="button" class="segment-btn" data-theme-val="system" aria-checked="true" role="radio" title="Match Browser / System Theme" aria-label="Match Browser or System Theme">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="2" y1="20" x2="22" y2="20"></line>
+                      <line x1="12" y1="17" x2="12" y2="20"></line>
+                    </svg>
+                  </button>
+                  <button type="button" class="segment-btn" data-theme-val="dark" aria-checked="false" role="radio" title="Dark Theme" aria-label="Dark Theme">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <span id="theme-help">System</span>
               </div>
             </div>
           </section>

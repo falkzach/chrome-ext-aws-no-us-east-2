@@ -13,8 +13,8 @@
     toggle.checked = enabled;
     stateLabel.textContent = enabled ? "Rewrites Enabled" : "Rewrites Disabled";
     stateHelp.textContent = enabled
-      ? "AWS Console region redirects are active."
-      : "Saved rules are paused.";
+      ? "AWS Console region rewrites are active."
+      : "Saved rules are disabled.";
   }
 
   function updateThemeUI(activeTheme) {
