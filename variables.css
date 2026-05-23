@@ -1,0 +1,173 @@
+:root {
+  /* Page Background Mappings */
+  --bg-popup: #f7f9fb;
+  --bg-dashboard: #edf2f4;
+
+  /* Light Theme Variables */
+  --bg: var(--bg-dashboard); /* Default to dashboard */
+  --bg-deep: #17232e;
+  --ink: #15202a;
+  --muted: #65717d;
+  --panel: #ffffff;
+  --panel-soft: #f7f9fb;
+  --panel-bg-glass: rgba(255, 255, 255, 0.9);
+  --line: #dbe3ea;
+  --line-strong: #c6d1db;
+  --accent: #ff9900;
+  --accent-dark: #c56f00;
+  --accent-ink: #1e1608;
+  --danger: #c2412d;
+  --danger-soft: #fff7f5;
+  --danger-border: #f0cbc4;
+  --focus: rgba(255, 153, 0, 0.32);
+  --shadow: 0 24px 80px rgba(15, 31, 46, 0.16);
+  --off: #9aa7b2; /* Switch off background color */
+
+  /* Background Gradient Variables */
+  --grad-bg-1: rgba(255, 153, 0, 0.22);
+  --grad-bg-2: rgba(36, 80, 110, 0.24);
+  --grad-bg-main-start: #f8fafc;
+  --grad-bg-main-middle: var(--bg);
+  --grad-bg-main-end: #dbe5eb;
+
+  /* Code Blocks */
+  --code-bg: #fff6e8;
+  --code-ink: #6a3d00;
+  --code-border: rgba(255, 153, 0, 0.26);
+
+  /* Primary Button (Orange Theme) */
+  --btn-primary: var(--accent);
+  --btn-primary-hover: var(--accent-dark);
+
+  /* Design Tokens: Border Radii */
+  --radius-outer: 24px;
+  --radius-middle: 20px;
+  --radius-inner: 16px;
+  --radius-controls: 14px;
+  --radius-segment: 18px;
+  --radius-small: 8px;
+  --radius-round: 999px;
+
+  /* Design Tokens: Spacings & Paddings */
+  --pad-layout: 24px;
+  --pad-pane: 18px;
+  --pad-controls: 14px;
+  --pad-hero: 26px;
+  --pad-code: 2px 7px;
+  --pad-input: 11px 13px;
+  --pad-btn: 10px 15px;
+  --pad-add-btn: 12px;
+  --pad-control-pane: 18px 12px;
+  --pad-segmented: 2px;
+  --pad-example-code: 9px 10px;
+
+  /* Design Tokens: Gaps */
+  --gap-layout: 24px;
+  --gap-grid: 12px;
+  --gap-hero: 22px;
+  --gap-rule-row: 10px;
+  --gap-input-label: 6px;
+  --gap-actions: 10px;
+  --gap-examples: 8px;
+  --gap-switch: 8px;
+  --offset-focus: 2px;
+
+  /* Design Tokens: Margins */
+  --gap-eyebrow: 8px;
+  --gap-h1: 12px;
+  --gap-h2: 8px;
+  --gap-grid-header: 8px;
+  --gap-rule-margin: 16px;
+  --margin-add-btn: 6px;
+  --margin-examples-bottom: 22px;
+
+  /* Design Tokens: Typography */
+  --font-sans: "Aptos", "Segoe UI", sans-serif;
+  --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --size-h1: 36px;
+  --size-h2: 18px;
+  --size-base: 14px;
+  --size-label: 12px;
+  --size-helper: 11px;
+  --size-segment: 13px;
+  --size-large: 16px;
+  --size-remove: 18px;
+  --size-code: 0.92em;
+
+  /* Design Tokens: Transitions */
+  --transition-speed: 140ms;
+  --transition-curve: ease;
+  --transition-fast: var(--transition-speed) var(--transition-curve);
+}
+
+/* System Dark Mode (default, when no theme attribute is set or set to system) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Dark Theme Variables */
+    --bg: #0f171e;
+    --bg-deep: #080c10;
+    --ink: #e3e8ec;
+    --muted: #8898a6;
+    --panel: #15202b;
+    --panel-soft: #192734;
+    --panel-bg-glass: rgba(21, 32, 43, 0.85);
+    --line: #38444d;
+    --line-strong: #4e5d6c;
+    --accent: #ff9900;
+    --accent-dark: #ffb84d;
+    --accent-ink: #15202b;
+    --danger: #e0245e;
+    --danger-soft: #3a1c1c;
+    --danger-border: #5c2c2c;
+    --focus: rgba(255, 153, 0, 0.45);
+    --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    --off: #4e5d6c;
+
+    /* Background Gradient Variables */
+    --grad-bg-1: rgba(255, 153, 0, 0.08);
+    --grad-bg-2: rgba(36, 80, 110, 0.15);
+    --grad-bg-main-start: #0c1015;
+    --grad-bg-main-middle: #0f171e;
+    --grad-bg-main-end: #070a0e;
+
+    /* Code Blocks */
+    --code-bg: #3a2200;
+    --code-ink: #ffc97a;
+    --code-border: rgba(255, 153, 0, 0.4);
+  }
+}
+
+/* Forced Dark Mode */
+:root[data-theme="dark"] {
+  /* Dark Theme Variables */
+  --bg: #0f171e;
+  --bg-deep: #080c10;
+  --ink: #e3e8ec;
+  --muted: #8898a6;
+  --panel: #15202b;
+  --panel-soft: #192734;
+  --panel-bg-glass: rgba(21, 32, 43, 0.85);
+  --line: #38444d;
+  --line-strong: #4e5d6c;
+  --accent: #ff9900;
+  --accent-dark: #ffb84d;
+  --accent-ink: #15202b;
+  --danger: #e0245e;
+  --danger-soft: #3a1c1c;
+  --danger-border: #5c2c2c;
+  --focus: rgba(255, 153, 0, 0.45);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  --off: #4e5d6c;
+
+  /* Background Gradient Variables */
+  --grad-bg-1: rgba(255, 153, 0, 0.08);
+  --grad-bg-2: rgba(36, 80, 110, 0.15);
+  --grad-bg-main-start: #0c1015;
+  --grad-bg-main-middle: #0f171e;
+  --grad-bg-main-end: #070a0e;
+
+  /* Code Blocks */
+  --code-bg: #3a2200;
+  --code-ink: #ffc97a;
+  --code-border: rgba(255, 153, 0, 0.4);
+}

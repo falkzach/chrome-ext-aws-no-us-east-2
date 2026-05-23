@@ -1,112 +1,3 @@
-:root {
-  /* Light Theme Variables */
-  --bg: #edf2f4;
-  --bg-deep: #17232e;
-  --ink: #15202a;
-  --muted: #65717d;
-  --panel: #ffffff;
-  --panel-soft: #f7f9fb;
-  --panel-bg-glass: rgba(255, 255, 255, 0.9);
-  --line: #dbe3ea;
-  --line-strong: #c6d1db;
-  --accent: #ff9900;
-  --accent-dark: #c56f00;
-  --accent-ink: #1e1608;
-  --danger: #c2412d;
-  --danger-soft: #fff7f5;
-  --danger-border: #f0cbc4;
-  --focus: rgba(255, 153, 0, 0.32);
-  --shadow: 0 24px 80px rgba(15, 31, 46, 0.16);
-
-  /* Background Gradient Variables */
-  --grad-bg-1: rgba(255, 153, 0, 0.22);
-  --grad-bg-2: rgba(36, 80, 110, 0.24);
-  --grad-bg-main-start: #f8fafc;
-  --grad-bg-main-middle: var(--bg);
-  --grad-bg-main-end: #dbe5eb;
-
-  /* Code Blocks */
-  --code-bg: #fff6e8;
-  --code-ink: #6a3d00;
-  --code-border: rgba(255, 153, 0, 0.26);
-
-  /* Primary Button (Orange Theme) */
-  --btn-primary: var(--accent);
-  --btn-primary-hover: var(--accent-dark);
-}
-
-/* System Dark Mode (default, when no theme attribute is set or set to system) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    /* Dark Theme Variables */
-    --bg: #0f171e;
-    --bg-deep: #080c10;
-    --ink: #e3e8ec;
-    --muted: #8898a6;
-    --panel: #15202b;
-    --panel-soft: #192734;
-    --panel-bg-glass: rgba(21, 32, 43, 0.85);
-    --line: #38444d;
-    --line-strong: #4e5d6c;
-    --accent: #ff9900;
-    --accent-dark: #ffb84d;
-    --accent-ink: #15202b;
-    --danger: #e0245e;
-    --danger-soft: #3a1c1c;
-    --danger-border: #5c2c2c;
-    --focus: rgba(255, 153, 0, 0.45);
-    --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
-
-    /* Background Gradient Variables */
-    --grad-bg-1: rgba(255, 153, 0, 0.08);
-    --grad-bg-2: rgba(36, 80, 110, 0.15);
-    --grad-bg-main-start: #0c1015;
-    --grad-bg-main-middle: #0f171e;
-    --grad-bg-main-end: #070a0e;
-
-    /* Code Blocks */
-    --code-bg: #3a2200;
-    --code-ink: #ffc97a;
-    --code-border: rgba(255, 153, 0, 0.4);
-
-  }
-}
-
-/* Forced Dark Mode */
-:root[data-theme="dark"] {
-  /* Dark Theme Variables */
-  --bg: #0f171e;
-  --bg-deep: #080c10;
-  --ink: #e3e8ec;
-  --muted: #8898a6;
-  --panel: #15202b;
-  --panel-soft: #192734;
-  --panel-bg-glass: rgba(21, 32, 43, 0.85);
-  --line: #38444d;
-  --line-strong: #4e5d6c;
-  --accent: #ff9900;
-  --accent-dark: #ffb84d;
-  --accent-ink: #15202b;
-  --danger: #e0245e;
-  --danger-soft: #3a1c1c;
-  --danger-border: #5c2c2c;
-  --focus: rgba(255, 153, 0, 0.45);
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
-
-  /* Background Gradient Variables */
-  --grad-bg-1: rgba(255, 153, 0, 0.08);
-  --grad-bg-2: rgba(36, 80, 110, 0.15);
-  --grad-bg-main-start: #0c1015;
-  --grad-bg-main-middle: #0f171e;
-  --grad-bg-main-end: #070a0e;
-
-  /* Code Blocks */
-  --code-bg: #3a2200;
-  --code-ink: #ffc97a;
-  --code-border: rgba(255, 153, 0, 0.4);
-
-}
-
 * {
   box-sizing: border-box;
 }
@@ -122,8 +13,8 @@ body {
     linear-gradient(135deg, var(--grad-bg-main-start) 0%, var(--grad-bg-main-middle) 48%, var(--grad-bg-main-end) 100%);
   background-repeat: no-repeat;
   background-attachment: fixed;
-  font: 14px/1.5 "Aptos", "Segoe UI", sans-serif;
-  transition: background 140ms ease, color 140ms ease;
+  font: var(--size-base)/1.5 var(--font-sans);
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 button,
@@ -134,23 +25,23 @@ input {
 .shell {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px;
+  padding: var(--pad-layout);
 }
 
 .dashboard-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 24px;
-  padding: 24px;
+  gap: var(--gap-layout);
+  padding: var(--pad-layout);
 }
 
 .panel {
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: var(--radius-outer);
   background: var(--panel-bg-glass);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
-  transition: background 140ms ease, border-color 140ms ease;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .editor-section {
@@ -161,27 +52,27 @@ input {
 .sidebar-section {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--gap-layout);
   align-self: start;
 }
 
 .inner-pane {
   border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 18px;
+  border-radius: var(--radius-middle);
+  padding: var(--pad-pane);
   background: var(--panel-soft);
-  transition: background 140ms ease, border-color 140ms ease;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 170px;
-  gap: 22px;
+  gap: var(--gap-hero);
   align-items: center;
   height: 180px; /* Force-align height with controls-panel */
-  margin-bottom: 24px; /* Align vertical gap with sidebar-section */
-  padding: 26px;
-  border-radius: 20px;
+  margin-bottom: var(--gap-layout); /* Align vertical gap with sidebar-section */
+  padding: var(--pad-hero);
+  border-radius: var(--radius-middle);
   overflow: hidden;
   background:
     linear-gradient(135deg, rgba(23, 35, 46, 0.98), rgba(34, 56, 66, 0.94)),
@@ -190,9 +81,9 @@ input {
 }
 
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 var(--gap-eyebrow);
   color: var(--accent);
-  font-size: 12px;
+  font-size: var(--size-label);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -206,15 +97,15 @@ p {
 
 h1 {
   max-width: none;
-  margin-bottom: 12px;
-  font-size: 36px;
+  margin-bottom: var(--gap-h1);
+  font-size: var(--size-h1);
   line-height: 1.03;
   letter-spacing: -0.04em;
 }
 
 h2 {
-  margin-bottom: 8px;
-  font-size: 18px;
+  margin-bottom: var(--gap-h2);
+  font-size: var(--size-h2);
   letter-spacing: -0.02em;
 }
 
@@ -231,13 +122,13 @@ h2 {
 
 code {
   border: 1px solid var(--code-border);
-  border-radius: 8px;
-  padding: 2px 7px;
+  border-radius: var(--radius-small);
+  padding: var(--pad-code);
   background: var(--code-bg);
   color: var(--code-ink);
-  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
-  font-size: 0.92em;
-  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  font-family: var(--font-mono);
+  font-size: var(--size-code);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .hero code {
@@ -258,7 +149,7 @@ code {
   right: 54px;
   top: 70px;
   height: 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-round);
   background: var(--accent);
   box-shadow: 0 12px 28px rgba(255, 153, 0, 0.24);
   transform: rotate(-18deg);
@@ -305,17 +196,17 @@ code {
 
 .rule-card {
   border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 18px;
+  border-radius: var(--radius-middle);
+  padding: var(--pad-pane);
   background: var(--panel-soft);
 }
 
 .rule-card-head {
   display: flex;
   justify-content: space-between;
-  gap: 18px;
+  gap: var(--pad-pane);
   align-items: flex-start;
-  margin-bottom: 18px;
+  margin-bottom: var(--pad-pane);
 }
 
 .rule-card-head p {
@@ -326,7 +217,7 @@ code {
 .rule-row {
   display: grid;
   grid-template-columns: 24px 220px 32px 220px 42px;
-  gap: 10px;
+  gap: var(--gap-rule-row);
   align-items: start;
 }
 
@@ -336,22 +227,22 @@ code {
   justify-content: center;
   height: 42px; /* Aligns perfectly with input heights */
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--size-large);
   user-select: none;
 }
 
 .grid-header {
-  margin: 0 0 8px;
+  margin: 0 0 var(--gap-grid-header);
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--size-label);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .rule-row {
-  margin-bottom: 16px;
-  transition: transform 140ms ease, opacity 140ms ease;
+  margin-bottom: var(--gap-rule-margin);
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
 }
 
 .drag-handle {
@@ -361,10 +252,10 @@ code {
   width: 24px;
   height: 42px;
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--size-large);
   cursor: grab;
   user-select: none;
-  transition: color 140ms ease, transform 140ms ease;
+  transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .drag-handle:hover:not(.locked) {
@@ -377,7 +268,7 @@ code {
 
 .drag-handle.locked {
   cursor: not-allowed;
-  font-size: 12px;
+  font-size: var(--size-label);
   color: var(--line-strong);
   opacity: 0.7;
 }
@@ -396,11 +287,11 @@ code {
 .input-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--gap-input-label);
 }
 
 .region-desc {
-  font-size: 11px;
+  font-size: var(--size-helper);
   color: var(--muted);
   padding-left: 8px;
   min-height: 16px;
@@ -408,7 +299,7 @@ code {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 140ms ease;
+  transition: color var(--transition-fast);
 }
 
 .region-desc.invalid {
@@ -433,12 +324,12 @@ code {
 input:not([type="checkbox"]) {
   width: 100%;
   border: 1px solid var(--line-strong);
-  border-radius: 14px;
-  padding: 11px 13px;
+  border-radius: var(--radius-controls);
+  padding: var(--pad-input);
   background: var(--panel);
   color: var(--ink);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
-  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease, color 140ms ease;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
 }
 
 input:not([type="checkbox"]):focus {
@@ -453,19 +344,19 @@ input:not([type="checkbox"]):hover {
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 18px;
+  gap: var(--gap-actions);
+  margin-top: var(--pad-pane);
 }
 
 button {
   border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 10px 15px;
+  border-radius: var(--radius-round);
+  padding: var(--pad-btn);
   background: var(--panel);
   color: var(--ink);
   cursor: pointer;
   font-weight: 700;
-  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease, color 140ms ease;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
 }
 
 button:hover {
@@ -476,7 +367,7 @@ button:hover {
 
 button:focus-visible {
   outline: 3px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: var(--offset-focus);
 }
 
 .primary {
@@ -515,16 +406,16 @@ button:focus-visible {
   justify-content: center;
   width: 100%;
   max-width: 538px;
-  margin-top: 6px;
-  margin-bottom: 16px;
+  margin-top: var(--margin-add-btn);
+  margin-bottom: var(--gap-rule-margin);
   border: 2px dashed var(--line-strong);
-  border-radius: 14px;
-  padding: 12px;
+  border-radius: var(--radius-controls);
+  padding: var(--pad-add-btn);
   background: transparent;
   color: var(--muted);
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 140ms ease, background 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .add-rule-row:hover {
@@ -546,7 +437,7 @@ button:focus-visible {
   color: var(--danger);
   background: var(--danger-soft);
   border-color: var(--danger-border);
-  font-size: 18px;
+  font-size: var(--size-remove);
   line-height: 1;
 }
 
@@ -565,7 +456,7 @@ button:focus-visible {
 
 #status {
   min-height: 24px;
-  margin-top: 16px;
+  margin-top: var(--gap-rule-margin);
   color: var(--muted);
   white-space: pre-line;
 }
@@ -576,13 +467,13 @@ button:focus-visible {
 
 .example-list {
   display: grid;
-  gap: 8px;
-  margin-bottom: 22px;
+  gap: var(--gap-examples);
+  margin-bottom: var(--margin-examples-bottom);
 }
 
 .example-list code {
   display: block;
-  padding: 9px 10px;
+  padding: var(--pad-example-code);
 }
 
 .help h2 + p {
@@ -596,7 +487,7 @@ button:focus-visible {
 
   .dashboard-card {
     grid-template-columns: 1fr;
-    padding: 14px;
+    padding: var(--pad-controls);
   }
 
   .hero {
@@ -620,15 +511,15 @@ button:focus-visible {
 .controls-panel {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 14px;
+  gap: var(--gap-controls);
+  padding: var(--pad-controls);
   height: 180px; /* Aligns visually with the Left Hero panel */
   align-items: stretch;
 }
 
 .controls-panel .eyebrow {
   grid-column: 1 / -1;
-  margin-bottom: 6px; /* Elegant padding under configs heading */
+  margin-bottom: var(--margin-add-btn); /* Elegant padding under configs heading */
   text-align: left;
   color: var(--muted);
 }
@@ -638,21 +529,21 @@ button:focus-visible {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 12px;
+  padding: var(--pad-control-pane);
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-inner);
   text-align: center;
-  transition: background 140ms ease, border-color 140ms ease;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .control-pane .pane-title {
-  font-size: 11px;
+  font-size: var(--size-helper);
   font-weight: 800;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 6px;
+  margin-bottom: var(--margin-add-btn);
 }
 
 .theme-wrapper,
@@ -660,15 +551,15 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap-switch);
 }
 
 #theme-help,
 #state-help {
-  font-size: 12px;
+  font-size: var(--size-label);
   font-weight: 700;
   color: var(--muted);
-  transition: color 140ms ease;
+  transition: color var(--transition-fast);
 }
 
 #state-help.active {
@@ -686,11 +577,11 @@ button:focus-visible {
   width: 48px;
   height: 28px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-round);
   background: var(--line-strong);
   cursor: pointer;
   box-shadow: none;
-  transition: background 140ms ease;
+  transition: background var(--transition-fast);
 }
 
 .control-pane input[type="checkbox"]::after {
@@ -703,7 +594,7 @@ button:focus-visible {
   background: white;
   box-shadow: 0 2px 6px rgba(15, 31, 46, 0.22);
   content: "";
-  transition: transform 140ms ease;
+  transition: transform var(--transition-fast);
 }
 
 .control-pane input[type="checkbox"]:checked {
@@ -718,9 +609,9 @@ button:focus-visible {
 .segmented-control {
   display: flex;
   background: var(--line);
-  border-radius: 20px;
-  padding: 2px;
-  transition: background 140ms ease;
+  border-radius: var(--radius-middle);
+  padding: var(--pad-segmented);
+  transition: background var(--transition-fast);
   flex-shrink: 0;
 }
 
@@ -730,17 +621,17 @@ button:focus-visible {
   justify-content: center;
   margin: 0;
   border: none;
-  border-radius: 18px;
+  border-radius: var(--radius-segment);
   width: 32px;
   height: 32px;
   padding: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--size-segment);
   cursor: pointer;
   box-shadow: none;
   transform: none;
-  transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .segmented-control button.segment-btn:hover {
