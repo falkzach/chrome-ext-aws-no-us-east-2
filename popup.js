@@ -58,10 +58,16 @@
 
   // Listen for storage changes to sync theme if changed in options page
   chrome.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName === "sync" && changes.theme) {
+    if (areaName !== "sync") return;
+
+    if (changes.theme) {
       const theme = changes.theme.newValue || "system";
       updateThemeUI(theme);
       document.documentElement.setAttribute("data-theme", theme);
+    }
+
+    if (changes[ENABLED_STORAGE_KEY]) {
+      render(changes[ENABLED_STORAGE_KEY].newValue !== false);
     }
   });
 

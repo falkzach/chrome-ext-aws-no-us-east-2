@@ -135,11 +135,11 @@
     const handle = document.createElement("div");
     if (isTerminalRule) {
       handle.className = "drag-handle locked";
-      handle.innerHTML = "🔒";
+      handle.textContent = "🔒";
       handle.title = "This default terminal rule is locked and cannot be reordered.";
     } else {
       handle.className = "drag-handle";
-      handle.innerHTML = "⋮⋮";
+      handle.textContent = "⋮⋮";
       handle.title = "Drag to reorder rule";
 
       // Enable drag only on handle mousedown/touchstart to preserve input text selection
@@ -187,7 +187,7 @@
 
     const arrow = document.createElement("div");
     arrow.className = "routing-arrow";
-    arrow.innerHTML = "➔";
+    arrow.textContent = "➔";
 
     const remove = document.createElement("button");
     remove.type = "button";
@@ -212,7 +212,7 @@
         draggingRow = row;
         row.classList.add("dragging");
         e.dataTransfer.effectAllowed = "move";
-        e.dataTransfer.setData("text/plain", ""); // Required for Firefox
+        e.dataTransfer.setData("text/plain", ""); // Required for drag-and-drop in some Chromium builds
       });
 
       row.addEventListener("dragend", () => {
@@ -369,7 +369,7 @@
 
   async function loadEnabledState() {
     const result = await chrome.storage.sync.get("enabled");
-    const enabled = result.hasOwnProperty("enabled") ? result.enabled : true;
+    const enabled = Object.hasOwn(result, "enabled") ? result.enabled : true;
     updateEnabledUI(enabled);
   }
 

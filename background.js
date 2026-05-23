@@ -13,6 +13,11 @@ async function getStoredRules() {
   return result[STORAGE_KEY] || DEFAULT_RULES;
 }
 
+/**
+ * Replace all existing dynamic DNR rules with freshly generated ones.
+ * Rule IDs are deterministic from RULE_ID_START and re-generated on every save.
+ * ensureRulesInstalled() cleans up all dynamic rules on startup as a safety net.
+ */
 async function replaceDynamicRules(rules) {
   const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
   const removeRuleIds = existingRules.map((rule) => rule.id);
@@ -93,33 +98,31 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "sync" && changes[ENABLED_STORAGE_KEY]) {
-    const enabled = changes[ENABLED_STORAGE_KEY].newValue !== false;
+  if (areaName !== "sync") return;
 
-    updateBadge(enabled).catch(logRuleInstallError);
+  const enabledChanged = ENABLED_STORAGE_KEY in changes;
+  const rulesChanged = STORAGE_KEY in changes;
 
-    if (enabled) {
-      getStoredRules()
-        .then(replaceDynamicRules)
-        .catch(logRuleInstallError);
-    } else {
-      removeDynamicRules().catch(logRuleInstallError);
+  if (!enabledChanged && !rulesChanged) return;
+
+  const enabledPromise = enabledChanged
+    ? Promise.resolve(changes[ENABLED_STORAGE_KEY].newValue !== false)
+    : chrome.storage.sync.get(ENABLED_STORAGE_KEY)
+        .then((r) => r[ENABLED_STORAGE_KEY] !== false);
+
+  enabledPromise.then((enabled) => {
+    updateBadge(enabled);
+
+    if (!enabled) return removeDynamicRules();
+
+    if (rulesChanged && validateRules(changes[STORAGE_KEY].newValue).valid) {
+      return replaceDynamicRules(changes[STORAGE_KEY].newValue);
     }
-  }
 
-  if (areaName === "sync" && changes[STORAGE_KEY]) {
-    const rules = changes[STORAGE_KEY].newValue;
-
-    if (validateRules(rules).valid) {
-      chrome.storage.sync.get(ENABLED_STORAGE_KEY).then((result) => {
-        if (result[ENABLED_STORAGE_KEY] !== false) {
-          return replaceDynamicRules(rules);
-        }
-
-        return undefined;
-      }).catch(logRuleInstallError);
+    if (enabledChanged) {
+      return getStoredRules().then(replaceDynamicRules);
     }
-  }
+  }).catch(logRuleInstallError);
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {

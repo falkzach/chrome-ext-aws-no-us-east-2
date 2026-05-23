@@ -1,3 +1,8 @@
+/**
+ * AWS Console region data.
+ * Source: https://docs.aws.amazon.com/general/latest/gr/rande.html
+ * Last updated: 2026-05-23
+ */
 (function () {
   "use strict";
 
