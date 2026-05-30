@@ -3,9 +3,9 @@
 A lightweight Chrome extension (Manifest V3) that rewrites AWS Management Console URLs using configurable ACL-style region rules.
 
 ## 🎥 Demo  
-[![Demo Video](https://img.youtube.com/vi/PFGHPuGjH3s/0.jpg)](https://www.youtube.com/watch?v=PFGHPuGjH3s)  
+[![Demo Video](https://img.youtube.com/vi/ljbeM1aiUdc/0.jpg)](https://www.youtube.com/watch?v=ljbeM1aiUdc)  
 Watch it in action:  
-https://www.youtube.com/watch?v=PFGHPuGjH3s
+https://www.youtube.com/watch?v=ljbeM1aiUdc
 
 ## Features
 - Defaults to `us-east-2 -> us-east-1` and `* -> *`.
