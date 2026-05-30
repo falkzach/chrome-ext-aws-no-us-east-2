@@ -13,6 +13,6 @@ zip -r "release-${VERSION}.zip" \
   "*.git*" \
   "*.antigravitycli*" \
   "README.md" \
+  "RELEASE.md" \
   "pack.sh" \
   "release-*.zip"
-  
