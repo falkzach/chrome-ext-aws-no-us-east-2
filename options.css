@@ -614,8 +614,9 @@ button:focus-visible {
 .controls-panel {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--gap-controls);
+  gap: var(--gap-controls, 12px);
   padding: var(--pad-controls);
+  padding-bottom: var(--pad-layout);
   min-height: 180px; /* Aligns visually with the Left Hero panel */
   align-items: stretch;
 }
