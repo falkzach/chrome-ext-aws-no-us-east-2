@@ -1,0 +1,158 @@
+:root {
+  --bg: var(--bg-popup);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 300px;
+  margin: 0;
+  color: var(--ink);
+  background: var(--bg);
+  font: var(--size-base)/1.4 var(--font-sans);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.popup {
+  padding: var(--pad-pane);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-grid);
+  margin-bottom: var(--gap-layout);
+}
+
+.eyebrow {
+  margin: 0 0 var(--gap-eyebrow);
+  color: var(--accent);
+  font-size: var(--size-helper);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--size-h2);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-switch);
+  padding: var(--pad-controls);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-inner);
+  background: var(--panel);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+strong,
+small {
+  display: block;
+}
+
+small {
+  margin-top: var(--gap-input-label);
+  color: var(--muted);
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 28px;
+  border-radius: var(--radius-round);
+  background: var(--off);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+input[type="checkbox"]::after {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 6px rgba(15, 31, 46, 0.22);
+  content: "";
+  transition: transform var(--transition-fast);
+}
+
+input[type="checkbox"]:checked {
+  background: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  transform: translateX(20px);
+}
+
+.segmented-control {
+  display: flex;
+  background: var(--line);
+  border-radius: var(--radius-middle);
+  padding: var(--pad-segmented);
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.segment-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: none;
+  border-radius: var(--radius-segment);
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--size-segment);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.segment-btn:hover {
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  color: var(--ink);
+}
+
+.segment-btn.active {
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(15, 31, 46, 0.08);
+}
+
+button {
+  width: 100%;
+  margin-top: var(--gap-layout);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-round);
+  padding: var(--pad-btn);
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+button:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(15, 31, 46, 0.06);
+  transform: translateY(-1px);
+}

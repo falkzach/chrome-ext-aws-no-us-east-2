@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AWS Console Region Rewriter</title>
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="shell">
+      <div class="panel dashboard-card">
+        <section class="editor-section">
+          <header class="hero">
+            <div>
+              <p class="eyebrow">AWS Region Rewriter</p>
+              <h1>Route console regions intentionally</h1>
+              <p class="lede">
+                Build first-match ACLs for AWS Console region rewrites. Put specific rules first,
+                broader wildcard rules later, and keep <code>* -> *</code> as the safe default.
+              </p>
+            </div>
+            <div class="route-mark" aria-hidden="true">
+              <span class="route-dot source"></span>
+              <span class="route-line"></span>
+              <span class="route-dot target"></span>
+            </div>
+          </header>
+
+          <form id="rules-form">
+            <div class="rules-layout">
+              <div class="rule-card">
+                <div class="rule-card-head">
+                  <div>
+                    <h2>Rewrite Rules</h2>
+                    <p>Rules are evaluated top to bottom. Shadowed rules are rejected before saving.</p>
+                  </div>
+                </div>
+
+                <div class="grid-header" aria-hidden="true">
+                  <span></span>
+                  <span>From</span>
+                  <span></span>
+                  <span>To</span>
+                  <span></span>
+                </div>
+                <div id="rules"></div>
+
+                <div class="actions">
+                  <button type="button" id="reset-rules">Reset Defaults</button>
+                  <button type="submit" class="primary">Save Rules</button>
+                </div>
+              </div>
+
+              <section class="help inner-pane">
+                <p class="eyebrow">Rule Guide</p>
+                <h2>Valid Patterns</h2>
+                <div class="example-list">
+                  <code>us-east-2 -> us-east-1</code>
+                  <code>us-* -> us-east-1</code>
+                  <code>us-west-* -> us-east-1</code>
+                  <code>* -> us-east-1</code>
+                  <code>* -> *</code>
+                </div>
+                <h2>Constraints</h2>
+                <p>
+                  Source wildcards are prefix-only. Destinations must be exact regions, except
+                  <code>*</code> is allowed only for pass-through defaults.
+                </p>
+              </section>
+            </div>
+          </form>
+
+          <div id="status" role="status"></div>
+        </section>
+
+        <aside class="sidebar-section">
+          <section class="controls-panel inner-pane">
+            <p class="eyebrow">Configs</p>
+            <div class="control-pane status-pane">
+              <span class="pane-title">Rewrites</span>
+              <div class="switch-wrapper">
+                <input id="enabled-toggle" type="checkbox" role="switch">
+                <span id="state-help">Active</span>
+              </div>
+            </div>
+             <div class="control-pane theme-pane">
+              <span class="pane-title">Theme</span>
+              <div class="theme-wrapper">
+                <div class="segmented-control" role="radiogroup" aria-label="Theme Selector">
+                  <button type="button" class="segment-btn" data-theme-val="light" aria-checked="false" role="radio" title="Light Theme" aria-label="Light Theme">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="5"></circle>
+                      <line x1="12" y1="1" x2="12" y2="3"></line>
+                      <line x1="12" y1="21" x2="12" y2="23"></line>
+                      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                      <line x1="1" y1="12" x2="3" y2="12"></line>
+                      <line x1="21" y1="12" x2="23" y2="12"></line>
+                      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                  </button>
+                  <button type="button" class="segment-btn" data-theme-val="system" aria-checked="true" role="radio" title="Match Browser / System Theme" aria-label="Match Browser or System Theme">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="2" y1="20" x2="22" y2="20"></line>
+                      <line x1="12" y1="17" x2="12" y2="20"></line>
+                    </svg>
+                  </button>
+                  <button type="button" class="segment-btn" data-theme-val="dark" aria-checked="false" role="radio" title="Dark Theme" aria-label="Dark Theme">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <span id="theme-help">System</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="region-groups inner-pane">
+            <p class="eyebrow">Active Regions</p>
+            <h2>Region Groups</h2>
+            <p class="help-desc">Toggle region groups to declutter autocomplete suggestions and validate rules.</p>
+            <div class="region-toggles-grid">
+              <div class="region-toggle-row">
+                <div class="region-toggle-label">
+                  <strong>Core Regions</strong>
+                  <span class="muted-label">Standard default regions</span>
+                </div>
+                <input type="checkbox" id="group-core" checked>
+              </div>
+              <div class="region-toggle-row">
+                <div class="region-toggle-label">
+                  <strong>Opt-In Regions</strong>
+                  <span class="muted-label">Manual account activation</span>
+                </div>
+                <input type="checkbox" id="group-opt-in" checked>
+              </div>
+              <div class="region-toggle-row">
+                <div class="region-toggle-label">
+                  <strong>GovCloud</strong>
+                  <span class="muted-label">US Government partition</span>
+                </div>
+                <input type="checkbox" id="group-gov">
+              </div>
+              <div class="region-toggle-row">
+                <div class="region-toggle-label">
+                  <strong>China</strong>
+                  <span class="muted-label">Mainland China partition</span>
+                </div>
+                <input type="checkbox" id="group-china">
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <datalist id="region-options"></datalist>
+
+    <script src="regions.js"></script>
+    <script src="ruleEngine.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
