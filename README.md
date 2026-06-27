@@ -25,6 +25,10 @@ https://www.youtube.com/watch?v=ljbeM1aiUdc
 - Duplicate `from` values, invalid regions, redirect loops, fully shadowed rules, and redundant source-specific pass-through rules are rejected.
 - Rule inputs are normalized, allowlisted, length-limited, and regex-escaped before dynamic redirect rules are generated.
 
+## Installation
+
+Install on the [Chrome Web Store: AWS Region Rewriter](https://chromewebstore.google.com/detail/aws-region-rewriter/ijbgcdmmdamccimlgoekincdbhnmoecj).
+
 ## Installation (Dev Mode)
 1. Clone this repo.  
 2. Open `chrome://extensions/` in Chrome.
